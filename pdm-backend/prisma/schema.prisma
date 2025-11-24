@@ -1,0 +1,135 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  email     String   @unique
+  password  String
+  joinDate  DateTime @default(now())
+  avatar    String?
+
+  channels  Channel[]
+  comments  Comment[]
+  likes     Like[]
+  subs      Subscription[]
+  history   ViewingHistory[]
+  playlists Playlist[]
+}
+
+model Channel {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  ownerId     Int
+  owner       User     @relation(fields: [ownerId], references: [id])
+
+  videos      Video[]
+  subs        Subscription[]
+}
+
+model Category {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+  videos Video[]
+}
+
+model Video {
+  id           Int      @id @default(autoincrement())
+  title        String
+  description  String?
+  uploadDate   DateTime @default(now())
+  duration     Int
+  views        Int      @default(0)
+  status       String   @default("public")
+  thumbnailUrl String?
+  hlsUrl       String?
+
+  channelId Int
+  channel   Channel @relation(fields: [channelId], references: [id])
+
+  categoryId Int?
+  category   Category? @relation(fields: [categoryId], references: [id])
+
+  comments   Comment[]
+  likes      Like[]
+  history    ViewingHistory[]
+  playlists  PlaylistVideo[]
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  text      String
+  createdAt DateTime @default(now())
+
+  userId  Int
+  videoId Int
+
+  user  User  @relation(fields: [userId], references: [id])
+  video Video @relation(fields: [videoId], references: [id])
+}
+
+model Like {
+  userId  Int
+  videoId Int
+  type    String
+  date    DateTime @default(now())
+
+  user  User  @relation(fields: [userId], references: [id])
+  video Video @relation(fields: [videoId], references: [id])
+
+  @@id([userId, videoId])
+}
+
+model Subscription {
+  userId    Int
+  channelId Int
+  date      DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id])
+  channel Channel @relation(fields: [channelId], references: [id])
+
+  @@id([userId, channelId])
+}
+
+model ViewingHistory {
+  id        Int      @id @default(autoincrement())
+  viewDate  DateTime @default(now())
+  watchTime Int
+
+  userId  Int
+  videoId Int
+
+  user  User  @relation(fields: [userId], references: [id])
+  video Video @relation(fields: [videoId], references: [id])
+}
+
+model Playlist {
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now())
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  videos PlaylistVideo[]
+}
+
+model PlaylistVideo {
+  playlistId Int
+  videoId    Int
+  addedAt    DateTime @default(now())
+
+  playlist Playlist @relation(fields: [playlistId], references: [id])
+  video    Video    @relation(fields: [videoId], references: [id])
+
+  @@id([playlistId, videoId])
+}
