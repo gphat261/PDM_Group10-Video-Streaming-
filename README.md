@@ -1,70 +1,104 @@
----
+# PDM Video Streaming Backend (Group 10)
 
-## 📌 System Architecture (Project Flow)
-Below is the simplified flow of our video upload & streaming process:
+A simplified video streaming backend system built using:
 
-
-**Process Overview**
-1. User uploads a video file from the frontend.
-2. Backend receives the file using **Multer**.
-3. FFmpeg automatically converts it to **HLS (.m3u8 + .ts segments)**.
-4. Converted files are stored in **local storage**.
-5. Metadata is stored using **Prisma ORM + MySQL**.
-6. Frontend test page streams the video using **HLS.js**.
+- Node.js / Express.js / TypeScript  
+- Prisma ORM + MySQL  
+- JWT Authentication  
+- FFmpeg (HLS conversion)  
+- Multer for file upload  
+- HTML/CSS frontend test interface  
 
 ---
 
-## 🗄 Database Schema (MySQL + Prisma)
+## 🚀 Features
 
-Example tables used in our project:
-- Video
-- User
-- ViewingHistory
-- Playlist (not implemented yet – future feature)
-
-SQL Export File: **VDStreamingDTB.sql**
+✔ User Register / Login  
+✔ Upload video using Multer  
+✔ Convert to HLS using FFmpeg  
+✔ Stream video using HLS.js  
+✔ Store metadata using MySQL (Prisma)
 
 ---
 
-## 🔑 API Usage Guide
+## 📦 Installation & Run
 
-### Register User (POST)
 ```bash
-POST http://localhost:4000/api/auth/register
-{
-  "username": "demo",
-  "email": "demo@gmail.com",
-  "password": "123456"
-}
-Upload Video (POST – Thunder Client / Curl)
+# Move to backend folder
+cd pdm-backend
 
-curl -X POST http://localhost:4000/api/videos/upload \
- -F "title=My first video" \
- -F "video=@/Users/youruser/Downloads/sample.mp4"
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+📁 Project Structure
+pdm-backend/
+ ├── src/
+ ├── uploads/
+ ├── prisma/
+ └── package.json
+
+pdm-frontend/
+ ├── index.html
+ └── player.html
+
+💡 Database Setup (MySQL + Prisma)
+cd pdm-backend
+
+# Generate Prisma client
+npx prisma generate
+
+# Create tables in MySQL
+npx prisma migrate dev --name init
+
+# Reset database (if needed)
+npx prisma migrate reset
 
 
-🧪 Demo Screenshots
-Action	Image
-Successful Register	Figure12
-Successful Login	Figure13
-FFmpeg HLS Conversion	Figure14
-HTML/CSS Interface	Figure15
-Play Video with HLS.js	Figure16
+🧪 Test API (Thunder Client / Postman)
+API	Method	Endpoint
+Register User	POST	http://localhost:4000/api/auth/register
+Login User (JWT)	POST	http://localhost:4000/api/auth/login
+Upload Video	POST	http://localhost:4000/api/videos/upload
 
-(You can upload images into /figures/ folder and link here)
+🧬 Technologies Used
+Tech	Purpose
+Node.js	Backend runtime
+Express.js	Server framework
+FFmpeg	Convert video → HLS
+Prisma ORM	Database connection
+MySQL	Store metadata
+HLS.js	Video streaming on frontend
 
-🚀 Future Development
+📌 Note
 
-✔ React / Next.js frontend
-✔ Admin Dashboard
-✔ User Profile / Avatar
-✔ Video Recommendation System
-✔ Deploy on AWS / DigitalOcean
+This prototype is created for educational purposes
+(International University – Principles of Database Management course).
 
-👨‍👩‍👧‍👦 Contributors (Group 10)
-Member	Role	Contribution
-You (Leader)	Backend + HLS + Report	25%
-Member 2	Database	8.33%
-Member 3	Test frontend	8.33%
-Member 4	Presentation	8.33%
-Member 5–10	Research / Support	8.33% each
+Future development could include:
+
+User channels
+
+Comments & Likes
+
+Video recommendation system
+
+Cloud storage (AWS S3 / Firebase)
+
+👨‍💻 Authors – Group 10
+Name	Role
+Phát	Backend + FFmpeg + Prisma
+Nam	Backend + Database
+Hoàng	Presentation
+Tú	Presentation
+Nhật	Presentation
+Vũ	Frontend UI
+Others	Report / Support
+
+📄 License
+
+This project is for educational use only
+(International University – VNUHCMC).
+Not for commercial deployment.
